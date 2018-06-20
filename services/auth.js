@@ -18,3 +18,16 @@ passport.deserializeUser((id, done) => {
 })
 
 
+passport.use(new LocalStrategy({ usernameField: email }, (username, password, done) => {
+    User.findOne({ where: { email: email } }, (err, user) => {
+      if (err) { return done(err) }
+      if (!user) { return done(null, false, 'Invalid Credentials!') }
+
+      if (!bcrypt.compareSync(password, user.password))
+      	return done(null, false, 'Invalid Credentials!')
+
+      return done(null, user)
+    })
+  }
+))
+
