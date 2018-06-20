@@ -12,14 +12,14 @@ passport.serializeUser((user, done) => {
 // Given user id, deserializeUser will return user object
 // via req.user
 passport.deserializeUser((id, done) => {
-  User.findById(id, (err, user) => {
+  model.User.findById(id, (err, user) => {
     done(err, user)
   })
 })
 
 
-passport.use(new LocalStrategy({ usernameField: email }, (username, password, done) => {
-    User.findOne({ where: { email: email } }, (err, user) => {
+passport.use(new LocalStrategy({ usernameField: 'email' }, (username, password, done) => {
+    model.User.findOne({ where: { email: email } }, (err, user) => {
       if (err) { return done(err) }
       if (!user) { return done(null, false, 'Invalid Credentials!') }
 
@@ -32,8 +32,8 @@ passport.use(new LocalStrategy({ usernameField: email }, (username, password, do
 ))
 
 
-const signup = ({ email, password, req }) => {
-	const user = User.build({ email, password })
+const signup = ({ email, password}, req) => {
+	const user = model.User.build({ email, password })
 	if (!email || !password) { throw new Error('You must provide email and password') }
 
 	return model.User.findOne({ where: { email } })
@@ -41,7 +41,7 @@ const signup = ({ email, password, req }) => {
 			if (existingUser) { throw new Error('Email in use') }
 			return user.save()
 		})
-		.then(user => {
+		.then((user) => {
 			return new Promise((resolve, reject) => {
 				req.login(user, (err) => {
 					if (err) { reject(err) }
