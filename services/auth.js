@@ -31,3 +31,43 @@ passport.use(new LocalStrategy({ usernameField: email }, (username, password, do
   }
 ))
 
+
+const signup = ({ email, password, req }) => {
+	const user = User.build({ email, password })
+	if (!email || !password) { throw new Error('You must provide email and password') }
+
+	return model.User.findOne({ where: { email } })
+		.then(existingUser => {
+			if (existingUser) { throw new Error('Email in use') }
+			return user.save()
+		})
+		.then(user => {
+			return new Promise((resolve, reject) => {
+				req.login(user, (err) => {
+					if (err) { reject(err) }
+					resolve(user)
+				})
+			})
+		})
+}
+
+
+const login = ({ email, password, req }) => {
+	return new Promise((resolve, reject) => {
+		password.authenticate('local', (err, user) => {
+			if (!user) { reject('Invalid Credentials!') }
+
+			req.login(user, () => resolve(user))
+		})({ body: { email, password } })
+	})
+}
+
+module.exports = {
+	signup,
+	login
+}
+
+
+
+
+
