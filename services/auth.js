@@ -32,7 +32,7 @@ passport.use(new LocalStrategy({ usernameField: 'email' }, (username, password, 
 ))
 
 
-const signup = ({ email, password}, req) => {
+const signup = ({ email, password }, req) => {
 	const user = model.User.build({ email, password })
 	if (!email || !password) { throw new Error('You must provide email and password') }
 
@@ -43,11 +43,11 @@ const signup = ({ email, password}, req) => {
 		})
 		.then((user) => {
 			return new Promise((resolve, reject) => {
-				req.login(user, (err) => {
-					if (err) { reject(err) }
-					resolve(user)
-				})
-			})
+		        req.login(user, (err) => {
+		          if (err) { reject(err) }
+		          resolve(user)
+		        })
+		    })
 		})
 }
 
@@ -56,7 +56,6 @@ const login = ({ email, password, req }) => {
 	return new Promise((resolve, reject) => {
 		password.authenticate('local', (err, user) => {
 			if (!user) { reject('Invalid Credentials!') }
-
 			req.login(user, () => resolve(user))
 		})({ body: { email, password } })
 	})
