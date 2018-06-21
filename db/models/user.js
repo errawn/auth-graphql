@@ -22,9 +22,7 @@ module.exports = (sequelize, DataTypes) => {
   };
 
   User.hook('beforeSave', (user, options) => {
-    const salt = bcrypt.genSaltSync(10);
-    user.password = bcrypt.hashSync(user.password, salt);
-
+    user.password = bcrypt.hashSync(user.password, 8)
   });
 
   return User;
