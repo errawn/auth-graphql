@@ -12,6 +12,27 @@ const UserType = require('./types/user_type')
 const mutation = new GraphQLObjectType({
 	name: 'Mutation',
 	fields: {
+		signup: {
+			type: UserType,
+			args: { 
+				email: { type: new GraphQLNonNull(GraphQLString) },
+				password: { type: new GraphQLNonNull(GraphQLString) }
+			},
+			resolve(parentValue, { email, password }, { model }) {
+				return new Promise((resolve, reject) => {
+					model.User.create({
+						email,
+						password
+					})
+					.then(user => {
+						if (!user)
+							return reject('Sorry. something went wrong')
+						resolve(user)
+					})
+					.catch(error => reject(error))
+				})
+			}
+		},
 		signin: {
 			type: UserType,
 			args: {
