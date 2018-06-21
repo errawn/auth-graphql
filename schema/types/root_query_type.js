@@ -1,10 +1,31 @@
 const graphql = require('graphql')
 const { GraphQLObjectType, GraphQLID } = graphql
 
+const UserType = require('./user_type')
+
 const RootQueryType = new GraphQLObjectType ({
 	name: 'RootQueryType',
 	fields: {
-		dummyField: { type: GraphQLID }
+		users: {
+			type: UserType,
+			// third parameter is the context defined in server.js
+			resolve(parentValue, args, { model, user }) {
+				if (!user) 
+					throw new Error('Auth Failed')
+
+				// GraphQL only supports promise based async code!
+				return new Promise((resolve, reject) => {
+					model.User.find({})
+						.then(users => {
+							if (!users)
+								return reject('No Users found')
+							resolve({ email: users.email })
+						})
+						.catch(error => reject(error))
+				})
+
+			}
+		}
 	}
 })
 
