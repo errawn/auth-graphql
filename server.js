@@ -1,9 +1,6 @@
 const express = require('express')
 const morgan = require('morgan')
 const bodyParser = require('body-parser')
-// Passport JS imports
-const passport = require('passport')
-const expressSession = require('express-session')
 // Grahql
 const expressGraphQL = require('express-graphql')
 const jwt = require('jsonwebtoken')
@@ -14,10 +11,6 @@ const schema = require('./schema/schema')
 const app = express()
 app.use(morgan('dev'))
 app.use(bodyParser.json())
-// Passport middleware
-app.use(expressSession({secret: 'superSecret', saveUninitialized: true, resave: true}))
-app.use(passport.initialize())
-app.use(passport.session())
 
 // secret key
 const SECRET = 'eggieandsausage'
