@@ -29,7 +29,7 @@ const mutation = new GraphQLObjectType({
 								return reject('Invalid Credentials')
 
 							const token = jwt.sign({ user: { id: user.id, email: user.email } }, SECRET, { expiresIn: '1yr' })
-							user.token = token
+							user.token = token	// add token property to user object which will be resolved
 							resolve(user)
 
 						})
