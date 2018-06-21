@@ -24,7 +24,7 @@ const SECRET = 'eggieandsausage'
 
 // this method checks token authenticity from
 // user attempting to login
-const addUser = async (req, res, next) => {
+const verifyTokenAuthenticity = async (req, res, next) => {
 	const token = req.headers['authentication']
 	try {
 		// verify token from headers
@@ -39,7 +39,7 @@ const addUser = async (req, res, next) => {
 }
 
 // Graphql
-app.use(addUser)
+app.use(verifyTokenAuthenticity)
 app.use('/graphql', expressGraphQL(req => ({
 	schema,
 	graphiql: true,
