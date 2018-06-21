@@ -6,6 +6,7 @@ const passport = require('passport')
 const expressSession = require('express-session')
 // Grahql
 const expressGraphQL = require('express-graphql')
+const jwt = require('jsonwebtoken')
 
 const model = require('./db/models')
 const schema = require('./schema/schema')
@@ -18,11 +19,37 @@ app.use(expressSession({secret: 'superSecret', saveUninitialized: true, resave: 
 app.use(passport.initialize())
 app.use(passport.session())
 
+// secret key
+const SECRET = 'eggieandsausage'
+
+// this method checks token authenticity from
+// user attempting to login
+const addUser = async (req, res, next) => {
+	const token = req.headers['authentication']
+	try {
+		// verify token from headers
+		const { user } = await jwt.verify(token, SECRET)
+		// store user in req
+		req.user = user
+	} catch(err) {
+		console.log(err)
+	}
+	// proceed
+	next()
+}
+
 // Graphql
-app.use('/graphql', expressGraphQL({
+app.use(addUser)
+app.use('/graphql', expressGraphQL(req => ({
 	schema,
-	graphiql: true
-}))
+	graphiql: true,
+	// this context is accessible within resolve()
+	context: {
+		model,
+		SECRET,
+		user: req.user
+	}
+})))
 
 
 // Initial Route
