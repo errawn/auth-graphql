@@ -6,6 +6,17 @@ const UserType = require('./user_type')
 const RootQueryType = new GraphQLObjectType ({
 	name: 'RootQueryType',
 	fields: {
+		// current user
+		user: {
+			type: UserType,
+			resolve(parentValue, args, { user }) {
+				return new Promise((resolve, reject) => {
+					if (!user)
+						return reject('No Current User')
+					resolve(user)
+				})
+			}
+		},
 		users: {
 			type: UserType,
 			// third parameter is the context defined in server.js
