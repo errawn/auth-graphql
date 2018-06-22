@@ -4,13 +4,16 @@ const bodyParser = require('body-parser')
 // Grahql
 const expressGraphQL = require('express-graphql')
 const jwt = require('jsonwebtoken')
+const cors = require('cors')
 
 const model = require('./db/models')
 const schema = require('./schema/schema')
 
 const app = express()
-app.use(morgan('dev'))
+app.use(cors())
+app.options('*', cors())
 app.use(bodyParser.json())
+app.use(morgan('dev'))
 
 // secret key
 const SECRET = 'eggieandsausage'
@@ -33,6 +36,7 @@ const verifyTokenAuthenticity = async (req, res, next) => {
 
 // Graphql
 app.use(verifyTokenAuthenticity)
+
 app.use('/graphql', expressGraphQL(req => ({
 	schema,
 	graphiql: true,
@@ -51,4 +55,4 @@ app.get('/', (req, res) => {
 })
 
 const PORT = process.env.PORT || 8080
-app.listen(PORT, () => console.log(`magic starts at PORT ${PORT}`))
+app.listen(PORT, () => console.log(`MAGIC STARTS AT PORT ${PORT}`))
