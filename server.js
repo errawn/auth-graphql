@@ -5,6 +5,7 @@ const bodyParser = require('body-parser')
 const expressGraphQL = require('express-graphql')
 const jwt = require('jsonwebtoken')
 const cors = require('cors')
+const chalk = require('chalk')
 
 const model = require('./db/models')
 const schema = require('./schema/schema')
@@ -55,4 +56,4 @@ app.get('/', (req, res) => {
 })
 
 const PORT = process.env.PORT || 8080
-app.listen(PORT, () => console.log(`MAGIC STARTS AT PORT ${PORT}`))
+app.listen(PORT, () => console.log(chalk.green(`MAGIC STARTS AT PORT ${PORT}`)))
