@@ -7,12 +7,6 @@ const {
 const bcrypt = require('bcryptjs')
 const jwt = require('jsonwebtoken')
 
-if (typeof localStorage === "undefined" || localStorage === null) {
-  const LocalStorage = require('node-localstorage').LocalStorage;
-  localStorage = new LocalStorage('./scratch');
-}
-
-
 const UserType = require('./types/user_type')
 
 const mutation = new GraphQLObjectType({
@@ -57,8 +51,6 @@ const mutation = new GraphQLObjectType({
 
 							const token = jwt.sign({ user: { id: user.id, email: user.email } }, SECRET, { expiresIn: '1yr' })
 							user.token = token	// add token property to user object which will be resolved
-							localStorage.setItem('token', token)
-							console.log(localStorage.getItem('token'))
 							resolve(user)
 
 						})
