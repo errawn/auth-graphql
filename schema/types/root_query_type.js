@@ -2,6 +2,7 @@ const graphql = require('graphql')
 const { GraphQLObjectType, GraphQLID } = graphql
 
 const UserType = require('./user_type')
+const PostType = require('./post_type')
 
 const RootQueryType = new GraphQLObjectType ({
 	name: 'RootQueryType',
@@ -17,6 +18,7 @@ const RootQueryType = new GraphQLObjectType ({
 				})
 			}
 		},
+		// Lists all users
 		users: {
 			type: UserType,
 			// third parameter is the context defined in server.js
@@ -36,7 +38,23 @@ const RootQueryType = new GraphQLObjectType ({
 				})
 
 			}
+		},
+		// Lists all Posts
+		posts: {
+			type: PostType,
+			resolve(parentValue, args, { model, user }) {
+				return new Promise((resolve, reject) => {
+					model.Post.find({})
+						.then(posts => {
+							if (!posts)
+								return reject('No Posts found')
+							resolve(posts)
+						})
+						.catch(error => reject(error))
+				})
+			}
 		}
+
 	}
 })
 
