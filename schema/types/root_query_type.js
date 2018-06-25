@@ -1,5 +1,5 @@
 const graphql = require('graphql')
-const { GraphQLObjectType, GraphQLID } = graphql
+const { GraphQLObjectType, GraphQLID, GraphQLList } = graphql
 
 const UserType = require('./user_type')
 const PostType = require('./post_type')
@@ -41,10 +41,12 @@ const RootQueryType = new GraphQLObjectType ({
 		},
 		// Lists all Posts
 		posts: {
-			type: PostType,
+			type: new GraphQLList(PostType),
 			resolve(parentValue, args, { model, user }) {
+				if (!user) 
+					throw new Error('Auth Failed')
 				return new Promise((resolve, reject) => {
-					model.Post.find({})
+					model.Post.findAll()
 						.then(posts => {
 							if (!posts)
 								return reject('No Posts found')
