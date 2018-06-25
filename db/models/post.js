@@ -1,7 +1,5 @@
 'use strict';
 
-const models = require('./');
-
 module.exports = (sequelize, DataTypes) => {
   var Post = sequelize.define('Post', {
     title: {
@@ -14,7 +12,7 @@ module.exports = (sequelize, DataTypes) => {
     	allowNull: false
     }
   }, {
-    underscored: true
+    
   });
   
   Post.associate = function(models) {
