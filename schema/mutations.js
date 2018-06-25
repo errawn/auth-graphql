@@ -69,9 +69,9 @@ const mutation = new GraphQLObjectType({
 				title: { type: new GraphQLNonNull(GraphQLString) },
 				body:  { type: new GraphQLNonNull(GraphQLString) }
 			},
-			resolve(parentValue, { title, body }, { model }) {
+			resolve(parentValue, { title, body }, { model, user }) {
 				return new Promise((resolve, reject) => {
-					model.Post.create({ title, body })
+					model.Post.create({ title, body, userId: user.id })
 						.then(post => {
 							if (!post)
 								return reject('Unable to create new post')
