@@ -8,11 +8,11 @@ const {
 } = graphql
 
 const PostType = new GraphQLObjectType({
-	name: 'PostType',
+	name: 'Post',
 	fields: () => ({
 		id: { type: GraphQLID },
-		title: { type: new GraphQLNonNull(GraphQLString) },
-		body: { type: new GraphQLNonNull(GraphQLString) },
+		title: { type: GraphQLString },
+		body: { type: GraphQLString },
 		userId: { type: GraphQLInt }
 	})
 })
