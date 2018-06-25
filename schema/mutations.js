@@ -8,10 +8,12 @@ const bcrypt = require('bcryptjs')
 const jwt = require('jsonwebtoken')
 
 const UserType = require('./types/user_type')
+const PostType = require('./types/post_type')
 
 const mutation = new GraphQLObjectType({
 	name: 'Mutation',
 	fields: {
+		// Auth Mutation
 		signup: {
 			type: UserType,
 			args: { 
@@ -57,6 +59,26 @@ const mutation = new GraphQLObjectType({
 						.catch(error => reject(error))
 				})
 
+			}
+		},
+
+		// Post Mutation
+		addPost: {
+			type: PostType,
+			args: {
+				title: { type: new GraphQLNonNull(GraphQLString) },
+				body:  { type: new GraphQLNonNull(GraphQLString) }
+			},
+			resolve(parentValue, { title, body }, { model }) {
+				return new Promise((resolve, reject) => {
+					model.Post.create({ title, body })
+						.then(post => {
+							if (!post)
+								return reject('Unable to create new post')
+							resolve(post)
+						})
+						.catch(error => reject(error))
+				})
 			}
 		}
 	}
