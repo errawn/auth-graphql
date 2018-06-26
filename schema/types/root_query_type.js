@@ -46,7 +46,7 @@ const RootQueryType = new GraphQLObjectType ({
 				if (!user) 
 					throw new Error('Auth Failed')
 				return new Promise((resolve, reject) => {
-					model.Post.findAll()
+					model.Post.findAll({ where: { userId: user.id } })
 						.then(posts => {
 							if (!posts)
 								return reject('No Posts found')
